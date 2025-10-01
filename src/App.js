@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import './App.css';
- 
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
- 
+  const [isPriority, setIsPriority] = useState(false);
+
   const handleAddTask = (e) => {
     e.preventDefault();
     if (newTask.trim() === '') return;
-    
+
     const task = {
       id: Date.now(),
       text: newTask,
       completed: false,
+      priority: isPriority,     // se marca si el checkbox estaba activo
     };
-    
+
     setTasks([...tasks, task]);
     setNewTask('');
+    setIsPriority(false);       // desmarca el checkbox al añadir
   };
- 
+
   const handleToggleComplete = (taskId) => {
     setTasks(
       tasks.map((task) =>
@@ -26,11 +29,11 @@ function App() {
       )
     );
   };
- 
+
   const handleDeleteTask = (taskId) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
- 
+
   return (
     <div className="app-container">
       <div className="todo-container">
@@ -42,11 +45,22 @@ function App() {
             onChange={(e) => setNewTask(e.target.value)}
             placeholder="Afegeix una nova tasca..."
           />
+          <input
+            type="checkbox"
+            checked={isPriority}
+            onChange={(e) => setIsPriority(e.target.checked)}
+          />
+          <label>Prioritària</label>
+
           <button type="submit">Afegir</button>
         </form>
+
         <ul className="task-list">
           {tasks.map((task) => (
-            <li key={task.id} className={task.completed ? 'completed' : ''}>
+            <li
+              key={task.id}
+              className={`${task.completed ? 'completed' : ''} ${task.priority ? 'priority' : ''}`}
+            >
               <span onClick={() => handleToggleComplete(task.id)}>
                 {task.text}
               </span>
@@ -58,5 +72,5 @@ function App() {
     </div>
   );
 }
- 
+
 export default App;
