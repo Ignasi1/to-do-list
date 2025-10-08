@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
 import './App.css';
+import TaskList from './components/TaskList';
+import TaskForm from './components/TaskForm';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState('');
-  const [isPriority, setIsPriority] = useState(false);
+  const [tasks, setTasks] = useState([
+    { id: 1, text: 'Comprar pa', completed: false, dueDate: null }, // Afegim dueDate
+    { id: 2, text: 'Acabar informe', completed: true, dueDate: new Date().toISOString() },
+  ]);
 
-  const handleAddTask = (e) => {
-    e.preventDefault();
-    if (newTask.trim() === '') return;
-
+  // Afegir nova tasca amb dueDate: null
+  const handleAddTask = (text) => {
     const task = {
       id: Date.now(),
-      text: newTask,
+      text: text,
       completed: false,
-      priority: isPriority,     // se marca si el checkbox estaba activo
+      dueDate: null, // Nou camp
     };
-
     setTasks([...tasks, task]);
-    setNewTask('');
-    setIsPriority(false);       // desmarca el checkbox al añadir
+  };
+
+  // Actualitzar només la data
+  const handleUpdateTaskDate = (taskId, newDate) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId
+          ? { ...task, dueDate: newDate ? newDate.toISOString() : null }
+          : task
+      )
+    );
   };
 
   const handleToggleComplete = (taskId) => {
@@ -37,37 +46,13 @@ function App() {
   return (
     <div className="app-container">
       <div className="todo-container">
-        <h1>La Meva Llista de Tasques</h1>
-        <form onSubmit={handleAddTask} className="task-form">
-          <input
-            type="text"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            placeholder="Afegeix una nova tasca..."
-          />
-          <input
-            type="checkbox"
-            checked={isPriority}
-            onChange={(e) => setIsPriority(e.target.checked)}
-          />
-          <label>Prioritària</label>
-
-          <button type="submit">Afegir</button>
-        </form>
-
-        <ul className="task-list">
-          {tasks.map((task) => (
-            <li
-              key={task.id}
-              className={`${task.completed ? 'completed' : ''} ${task.priority ? 'priority' : ''}`}
-            >
-              <span onClick={() => handleToggleComplete(task.id)}>
-                {task.text}
-              </span>
-              <button onClick={() => handleDeleteTask(task.id)}>Eliminar</button>
-            </li>
-          ))}
-        </ul>
+        <TaskForm onAddTask={handleAddTask} />
+        <TaskList
+          tasks={tasks}
+          onToggleComplete={handleToggleComplete}
+          onDeleteTask={handleDeleteTask}
+          onUpdateTaskDate={handleUpdateTaskDate}
+        />
       </div>
     </div>
   );
