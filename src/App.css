@@ -73,10 +73,12 @@ h1 {
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid #eee;
+  
 }
  
 .task-list li:last-child {
   border-bottom: none;
+  
 }
  
 .task-list li span {
@@ -98,6 +100,7 @@ h1 {
   cursor: pointer;
   margin-left: 10px;
   transition: background-color 0.2s;
+  
 }
  
 .task-list li button:hover {
