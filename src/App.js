@@ -31,6 +31,7 @@ function App() {
     );
   };
 
+  // Marcar com a completa
   const handleToggleComplete = (taskId) => {
     setTasks(
       tasks.map((task) =>
@@ -42,6 +43,7 @@ function App() {
   const handleDeleteTask = (taskId) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
+
 
   return (
     <div className="app-container">
